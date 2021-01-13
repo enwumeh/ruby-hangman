@@ -1,10 +1,15 @@
 class Hangman
 
   def initialize
-    @letterz = ('a'..'z').to_a
+    # @letterz = ('a'..'z').to_a
     @word = wordz.sample
     @lives = 7
-    @correctly_guessed
+    # @correctly_guessed = []
+    @tease = ""
+
+    @word.first.size.times do 
+      @tease = tease + "_"
+    end 
   end
 
   def wordz
@@ -18,14 +23,21 @@ class Hangman
     ]
   end
 
-  def tease_word 
-    tease = ''
+  def tease_word final_guess = nil
+    update_teaser(final_guess) unless final_guess.nil?
+  puts @tease
+  end 
 
-    @word.first.size.times do 
-    tease = tease + '_'
-  end
+  def update_teaser final_guess
+    new_tease = @tease.split
 
-  puts tease
+    new_tease.each_with_index do |letter, index|
+      if letter == '_' && @word.first[index] == final_guess
+        new_tease[index] = final_guess
+      end   
+    end 
+
+    @tease = new_tease.join(' ')
   end 
 
   def user_guess
@@ -39,34 +51,39 @@ class Hangman
     if correct_guess
       puts "yes good job!!"
      
-      @correctly_guessed << guess
+      # @correctly_guessed << guess
 
-      @letterz.delete guess
-      tease_word
-      user_guess
-
+      # @letterz.delete guess
+      tease_word guess
+      # user_guess
+      if @word.first == @tease.split.join
+        puts "YAY you won!!"
+        user_guess
+      end 
     else 
       @lives -= 1
       puts "Oops, try again! You have #{ @lives } left"
       user_guess
   end
-else
+ else
    puts "game over"
 end 
 
   def start 
-#ask user for one letter 
-puts "New game has begun!"
-puts "Your word is #{ @word.first.size } letters long"
+   #ask user for one letter 
+    puts "New game has begun!"
+    puts "Your word is #{ @word.first.size } letters long"
+    puts "To leave game, type control C"
 
 
-puts "Here is your clue: #{ @word.last }"
+    puts "Here is your clue: #{ @word.last }"
 
 
-puts "You guessed #{guess}"
-  end
+    puts "You guessed #{@word.last}"
+    user_guess
+    end
 
-end
+   end
 
 game = Hangman.new
 game.start
