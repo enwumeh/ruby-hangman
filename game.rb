@@ -3,6 +3,8 @@ class Hangman
   def initialize
     @letterz = ('a'..'z').to_a
     @word = wordz.sample
+    @lives = 7
+    @correctly_guessed
   end
 
   def wordz
@@ -20,8 +22,37 @@ class Hangman
     tease = ''
 
     @word.first.size.times do 
-    tease = tease + '__'
+    tease = tease + '_'
   end
+
+  puts tease
+  end 
+
+  def user_guess
+    if @lives > 0
+    puts "type a letter!"
+    guess = gets.chomp
+
+    #if the guessed letter is not part of the word..
+    correct_guess = @word.first.include? guess
+
+    if correct_guess
+      puts "yes good job!!"
+     
+      @correctly_guessed << guess
+
+      @letterz.delete guess
+      tease_word
+      user_guess
+
+    else 
+      @lives -= 1
+      puts "Oops, try again! You have #{ @lives } left"
+      user_guess
+  end
+else
+   puts "game over"
+end 
 
   def start 
 #ask user for one letter 
@@ -30,8 +61,7 @@ puts "Your word is #{ @word.first.size } letters long"
 
 
 puts "Here is your clue: #{ @word.last }"
-puts "type a letter!"
-guess = gets.chomp
+
 
 puts "You guessed #{guess}"
   end
